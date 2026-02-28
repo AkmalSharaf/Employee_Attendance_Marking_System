@@ -124,183 +124,199 @@ class _EmployeeRegistrationScreenState
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Header
-              const Text(
-                'Register New Employee',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+        child: Column(
+          children: [
+            // header icon
+            const Icon(Icons.person_add, size: 80, color: Colors.deepPurple),
+            const SizedBox(height: 8),
+            const Text(
+              'Register New Employee',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'Fill in the employee details below',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
-                textAlign: TextAlign.center,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Fill in the employee details below',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
               ),
-              const SizedBox(height: 24),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
 
-              // Employee Name Field
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Employee Name *',
-                  hintText: 'Enter full name',
-                  prefixIcon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
-                ),
-                textCapitalization: TextCapitalization.words,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter employee name';
-                  }
-                  if (value.trim().length < 2) {
-                    return 'Name must be at least 2 characters';
-                  }
-                  return null;
-                },
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              const SizedBox(height: 16),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Employee Name Field
+                      TextFormField(
+                        controller: _nameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Employee Name *',
+                          hintText: 'Enter full name',
+                          prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(),
+                        ),
+                        textCapitalization: TextCapitalization.words,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter employee name';
+                          }
+                          if (value.trim().length < 2) {
+                            return 'Name must be at least 2 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
 
-              // Employee ID Field
-              TextFormField(
-                controller: _employeeIdController,
-                decoration: const InputDecoration(
-                  labelText: 'Employee ID *',
-                  hintText: 'Enter employee ID (numbers only)',
-                  prefixIcon: Icon(Icons.badge),
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter employee ID';
-                  }
-                  if (!RegExp(r'^[0-9]+$').hasMatch(value.trim())) {
-                    return 'Employee ID must contain only numbers';
-                  }
-                  if (value.trim().length < 2) {
-                    return 'Employee ID must be at least 2 characters';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
+                      // Employee ID Field
+                      TextFormField(
+                        controller: _employeeIdController,
+                        decoration: const InputDecoration(
+                          labelText: 'Employee ID *',
+                          hintText: 'Enter employee ID (numbers only)',
+                          prefixIcon: Icon(Icons.badge),
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter employee ID';
+                          }
+                          if (!RegExp(r'^[0-9]+$').hasMatch(value.trim())) {
+                            return 'Employee ID must contain only numbers';
+                          }
+                          if (value.trim().length < 2) {
+                            return 'Employee ID must be at least 2 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
 
-              // Department Field
-              TextFormField(
-                controller: _departmentController,
-                decoration: const InputDecoration(
-                  labelText: 'Department *',
-                  hintText: 'Enter department',
-                  prefixIcon: Icon(Icons.business),
-                  border: OutlineInputBorder(),
-                ),
-                textCapitalization: TextCapitalization.words,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter department';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
+                      // Department Field
+                      TextFormField(
+                        controller: _departmentController,
+                        decoration: const InputDecoration(
+                          labelText: 'Department *',
+                          hintText: 'Enter department',
+                          prefixIcon: Icon(Icons.business),
+                          border: OutlineInputBorder(),
+                        ),
+                        textCapitalization: TextCapitalization.words,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter department';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
 
-              // Contact Number Field
-              TextFormField(
-                controller: _contactNumberController,
-                decoration: const InputDecoration(
-                  labelText: 'Contact Number *',
-                  hintText: 'Enter 10-digit phone number',
-                  prefixIcon: Icon(Icons.phone),
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.phone,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(10),
-                ],
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter contact number';
-                  }
-                  if (value.trim().length != 10) {
-                    return 'Contact number must be exactly 10 digits';
-                  }
-                  if (!RegExp(r'^[0-9]{10}$').hasMatch(value.trim())) {
-                    return 'Contact number must contain only numbers';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 24),
+                      // Contact Number Field
+                      TextFormField(
+                        controller: _contactNumberController,
+                        decoration: const InputDecoration(
+                          labelText: 'Contact Number *',
+                          hintText: 'Enter 10-digit phone number',
+                          prefixIcon: Icon(Icons.phone),
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.phone,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10),
+                        ],
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter contact number';
+                          }
+                          if (value.trim().length != 10) {
+                            return 'Contact number must be exactly 10 digits';
+                          }
+                          if (!RegExp(r'^[0-9]{10}$').hasMatch(value.trim())) {
+                            return 'Contact number must contain only numbers';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
 
-              // Submit Button
-              SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                      // Submit Button
+                      SizedBox(
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : _submitForm,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            foregroundColor: Colors.white,
                           ),
-                        )
-                      : const Text(
-                          'Register Employee',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          child: _isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                  ),
+                                )
+                              : const Text(
+                                  'Register Employee',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Clear Button
+                      SizedBox(
+                        height: 50,
+                        child: OutlinedButton(
+                          onPressed: _isLoading ? null : _resetForm,
+                          child: const Text(
+                            'Clear Form',
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
-                ),
-              ),
-              const SizedBox(height: 16),
+                      ),
 
-              // Clear Button
-              SizedBox(
-                height: 50,
-                child: OutlinedButton(
-                  onPressed: _isLoading ? null : _resetForm,
-                  child: const Text(
-                    'Clear Form',
-                    style: TextStyle(fontSize: 16),
+                      // Note
+                      const SizedBox(height: 24),
+                      const Text(
+                        '* Required fields',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               ),
-
-              // Note
-              const SizedBox(height: 24),
-              const Text(
-                '* Required fields',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

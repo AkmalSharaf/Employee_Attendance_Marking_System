@@ -146,52 +146,80 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search employees by name...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Column(
+          children: [
+            // Search Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search employees by name...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              _searchQuery = '';
+                            });
+                          },
+                        )
+                      : null,
                 ),
-                filled: true,
-                fillColor: Colors.grey[100],
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            _searchQuery = '';
-                          });
-                        },
-                      )
-                    : null,
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
+                },
               ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
             ),
-          ),
 
-          // Attendance Summary
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: _buildAttendanceSummary(),
-          ),
+            // Attendance Summary card
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+              child: Card(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: _buildAttendanceSummary(),
+                ),
+              ),
+            ),
 
-          const SizedBox(height: 8),
+            const SizedBox(height: 8),
 
-          // Employee List
-          Expanded(
-            child: _buildEmployeeList(),
-          ),
-        ],
+            // hint about delete gesture
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+              child: Text(
+                'Swipe right to left to delete',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // Employee List
+            Expanded(
+              child: _buildEmployeeList(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -392,14 +420,15 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
         return RefreshIndicator(
           onRefresh: _loadAttendanceForDate,
-          child: ListView.builder(
+          child: ListView.separated(
             itemCount: filteredEmployees.length,
             padding: const EdgeInsets.symmetric(horizontal: 16),
+            separatorBuilder: (context, index) => const SizedBox(height: 8),
             itemBuilder: (context, index) {
               final employee = filteredEmployees[index];
               final isPresent = _attendanceStatus[employee.id] ?? false;
 
-              // Support swipe-to-delete and a delete button
+              // Support swipe-to-delete
               return Dismissible(
                 key: Key('employee_${employee.id}'),
                 direction: DismissDirection.endToStart,
