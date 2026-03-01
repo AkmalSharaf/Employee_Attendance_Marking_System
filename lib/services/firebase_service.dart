@@ -22,7 +22,7 @@ class FirebaseService {
   // ==================== EMPLOYEE OPERATIONS ====================
 
   /// Get all employees from Firestore
-  /// Returns a stream of List<Employee> for real-time updates
+  /// Returns a stream of `List<Employee>` for real-time updates
   Stream<List<Employee>> getAllEmployees() {
     return _firestore
         .collection(employeesCollection)

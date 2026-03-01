@@ -38,6 +38,7 @@ dependencies:
   # Firebase dependencies
   firebase_core: ^3.12.1
   cloud_firestore: ^5.6.6
+  firebase_auth: ^5.5.3
 
   # Utility packages
   intl: ^0.20.2
