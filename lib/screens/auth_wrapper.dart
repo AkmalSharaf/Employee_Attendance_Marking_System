@@ -141,32 +141,173 @@ class _HomeScreenWithBottomNavState extends State<_HomeScreenWithBottomNav> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthService authService = AuthService();
+    final String? userEmail = authService.getCurrentUserEmail();
+    final String userInitial = userEmail != null && userEmail.isNotEmpty 
+        ? userEmail[0].toUpperCase() 
+        : 'A';
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Employee Attendance'),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.badge_outlined,
+                color: Theme.of(context).colorScheme.primary,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Text(
+                'Employee Attendance',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
         actions: [
-          // User email display
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Center(
-              child: FutureBuilder<String?>(
-                future: Future.value(AuthService().getCurrentUserEmail()),
-                builder: (context, snapshot) {
-                  final email = snapshot.data ?? 'Admin';
-                  return Text(
-                    email,
-                    style: const TextStyle(fontSize: 14),
-                  );
-                },
+          // User Profile Avatar with Dropdown
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'logout') {
+                _handleLogout();
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'profile',
+                enabled: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 24,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          child: Text(
+                            userInitial,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Admin',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                userEmail ?? 'admin@example.com',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.logout,
+                      color: Theme.of(context).colorScheme.error,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Logout',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            offset: const Offset(0, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    child: Text(
+                      userInitial,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Admin',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      Text(
+                        userEmail ?? 'Tap to logout',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 20,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ],
               ),
             ),
           ),
-          // Logout button
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
-            onPressed: _handleLogout,
-          ),
+          const SizedBox(width: 8),
         ],
       ),
       body: IndexedStack(
