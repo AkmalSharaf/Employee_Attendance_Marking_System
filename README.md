@@ -1,10 +1,17 @@
 # Employee Attendance Marking System
 
-A Flutter application for managing employee attendance using Firebase Firestore.
+A Flutter application for managing employee attendance using Firebase Firestore with Firebase Authentication for admin access control.
 
 ## Features
 
-### 1. Employee Registration Module
+### 1. Admin Authentication
+- Secure email/password login
+- Professional login screen with Material 3 design
+- Auth state management (auto login/logout)
+- User profile dropdown with logout option
+- Only authorized admins can access the app
+
+### 2. Employee Registration Module
 - Add new employees with required fields:
   - Employee Name
   - Employee ID
@@ -13,7 +20,7 @@ A Flutter application for managing employee attendance using Firebase Firestore.
 - Form validation with error messages
 - Success/error notifications after submission
 
-### 2. Attendance Marking Module
+### 3. Attendance Marking Module
 - Display list of all registered employees
 - Search/filter employees by name
 - Mark attendance with toggle switches
@@ -25,6 +32,7 @@ A Flutter application for managing employee attendance using Firebase Firestore.
 
 - **Framework**: Flutter (latest stable)
 - **Backend**: Firebase Firestore
+- **Authentication**: Firebase Authentication (Email/Password)
 - **State Management**: StreamBuilder with Firebase streams
 - **Architecture**: Clean Architecture with separation of concerns
 
@@ -38,9 +46,11 @@ lib/
 │   ├── employee.dart              # Employee data model
 │   └── attendance.dart            # Attendance data model
 ├── services/
-│   └── firebase_service.dart      # Firebase CRUD operations
+│   ├── auth_service.dart          # Firebase Authentication operations
+│   └── firebase_service.dart      # Firebase Firestore CRUD operations
 └── screens/
-    ├── home_screen.dart           # Bottom navigation container
+    ├── auth_wrapper.dart          # Authentication state handler
+    ├── login_screen.dart         # Admin login screen
     ├── employee_registration_screen.dart  # Employee registration form
     └── attendance_screen.dart    # Attendance marking screen
 ```
@@ -93,25 +103,26 @@ flutter pub get
 1. Place `GoogleService-Info.plist` in `ios/Runner/`
 2. Configure in Xcode
 
-### Step 4: Update Firebase Configuration
+### Step 4: Enable Firebase Services
 
-Edit `lib/firebase_options.dart` with your Firebase project credentials:
-
-```dart
-static const FirebaseOptions android = FirebaseOptions(
-  apiKey: 'YOUR_ACTUAL_API_KEY',
-  appId: 'YOUR_ACTUAL_APP_ID',
-  messagingSenderId: 'YOUR_SENDER_ID',
-  projectId: 'YOUR_PROJECT_ID',
-  storageBucket: 'YOUR_STORAGE_BUCKET',
-);
-```
-
-### Step 5: Enable Firestore
-
+#### Enable Firestore Database:
 1. In Firebase Console, go to "Firestore Database"
 2. Click "Create Database"
 3. Choose a location and start in test mode (or set appropriate rules)
+
+#### Enable Firebase Authentication:
+1. In Firebase Console, go to "Authentication"
+2. Click "Get Started"
+3. Go to "Sign-in method" tab
+4. Enable "Email/Password" provider
+5. Click "Save"
+
+### Step 5: Create Admin User
+
+1. In Firebase Console, go to "Authentication" → "Users"
+2. Click "Add user"
+3. Enter admin email and password (min 6 characters)
+4. Click "Add user"
 
 ### Step 6: Run the App
 
@@ -123,27 +134,40 @@ flutter run
 flutter run -d <device_id>
 ```
 
-## Firestore Security Rules (For Production)
+## Firebase Security Rules (For Production)
 
-When ready to deploy, update your Firestore rules:
+When ready to deploy, update your Firestore and Authentication rules:
 
+### Firestore Rules:
 ```
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /employees/{employee} {
-      allow read: if true;
-      allow write: if request.auth != null;
+      allow read, write: if request.auth != null;
     }
     match /attendance/{attendance} {
-      allow read: if true;
-      allow write: if request.auth != null;
+      allow read, write: if request.auth != null;
     }
   }
 }
 ```
 
+### Authentication Settings:
+- Go to Firebase Console → Authentication → Settings
+- Configure user session timeout as needed
+
 ## App Usage
+
+### Login
+1. Launch the app
+2. Enter admin email and password
+3. Tap "Sign In" to access the app
+
+### Logging Out
+1. Tap on the admin profile in the top-right corner
+2. Select "Logout" from the dropdown
+3. Confirm logout in the dialog
 
 ### Registering Employees
 1. Tap "Register" in the bottom navigation
@@ -161,14 +185,25 @@ service cloud.firestore {
 
 The app features:
 - Clean, Material Design 3 UI
+- Professional login screen with validation
+- User profile dropdown with logout
 - Real-time search functionality
 - Visual attendance indicators (green border for present)
 - Attendance summary cards
+
+## Authentication Features
+
+- **Secure Login**: Email/password authentication
+- **Auto State Management**: Automatically handles login/logout state
+- **Professional UI**: Material 3 design with proper alignment
+- **User Info Display**: Shows admin email and avatar
+- **Logout Confirmation**: Dialog confirmation before logging out
 
 ## Error Handling
 
 - Network errors are displayed as snackbar messages
 - Form validation provides immediate feedback
+- Authentication errors show user-friendly messages
 - Empty states guide users on next steps
 
 ## License
